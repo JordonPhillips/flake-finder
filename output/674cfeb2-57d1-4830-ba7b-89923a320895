@@ -1,0 +1,13 @@
+E
+======================================================================
+ERROR: Failure: OSError (No such file /Users/phjordon/workspace/flake-finder/tests/unit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/phjordon/.pyenv/versions/3.5.1/envs/cli/lib/python3.5/site-packages/nose/failure.py", line 41, in runTest
+    raise self.exc_class(self.exc_val)
+OSError: No such file /Users/phjordon/workspace/flake-finder/tests/unit
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (errors=1)

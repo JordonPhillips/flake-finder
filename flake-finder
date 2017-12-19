@@ -1,1 +1,54 @@
 #!/usr/bin/env python
+import argparse
+from multiprocessing import Pool, cpu_count
+import os
+import subprocess
+from uuid import uuid4
+
+
+def run_tests_multiprocess(tests, output_dir, num_processes):
+    args = [(tests, output_dir) for _ in range(num_processes)]
+    with Pool(num_processes) as pool:
+        pool.starmap(run_tests, args)
+
+
+def run_tests(tests, output_dir):
+    rc, output = _run_tests(tests)
+    if rc != 0:
+        output_file = os.path.join(output_dir, str(uuid4()))
+        with open(output_file, 'wb') as f:
+            f.write(output)
+
+
+def _run_tests(tests):
+    process = subprocess.Popen(
+        ['nosetests', tests],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT
+    )
+    stdout, _ = process.communicate()
+    rc = process.wait()
+    return rc, stdout
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-t', '--tests', default='tests/unit')
+    parser.add_argument('-o', '--output-dir', default='output')
+    parser.add_argument('-p', '--num-processes', type=int, default=cpu_count())
+    args = parser.parse_args()
+
+    if os.path.isfile(args.output_dir):
+        raise Exception('% is a file, it should be a directory')
+    elif not os.path.isdir(args.output_dir):
+        os.makedirs(args.output_dir)
+
+    run_tests_multiprocess(
+        tests=args.tests,
+        output_dir=args.output_dir,
+        num_processes=args.num_processes
+    )
+
+
+if __name__ == "__main__":
+    main()

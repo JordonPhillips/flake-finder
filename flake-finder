@@ -46,11 +46,14 @@ def main():
     elif not os.path.isdir(args.output_dir):
         os.makedirs(args.output_dir)
 
-    run_tests_multiprocess(
-        tests=args.tests,
-        output_dir=args.output_dir,
-        num_processes=args.num_processes
-    )
+    try:
+        run_tests_multiprocess(
+            tests=args.tests,
+            output_dir=args.output_dir,
+            num_processes=args.num_processes
+        )
+    except KeyboardInterrupt:
+        pass
 
 
 if __name__ == "__main__":

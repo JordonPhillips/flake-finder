@@ -13,11 +13,12 @@ def run_tests_multiprocess(tests, output_dir, num_processes):
 
 
 def run_tests(tests, output_dir):
-    rc, output = _run_tests(tests)
-    if rc != 0:
-        output_file = os.path.join(output_dir, str(uuid4()))
-        with open(output_file, 'wb') as f:
-            f.write(output)
+    while True:
+        rc, output = _run_tests(tests)
+        if rc != 0:
+            output_file = os.path.join(output_dir, str(uuid4()))
+            with open(output_file, 'wb') as f:
+                f.write(output)
 
 
 def _run_tests(tests):
